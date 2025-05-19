@@ -1,3 +1,4 @@
+// Import necessary libraries and components
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +16,7 @@ import { format } from 'date-fns';
 import { CalendarIcon, CheckCircle, Circle, PlusCircle, Trash2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
+// Define the Task type
 interface Task {
   id: string;
   title: string;
@@ -23,16 +25,24 @@ interface Task {
   completed: boolean;
   priority: 'High' | 'Medium' | 'Low';
 }
-
+// Main components
 const TaskManager = () => {
+  // state to hold all tasks
   const [tasks, setTasks] = useState<Task[]>([]);
+
+  // UI state: is the form for adding/editing tasks open
   const [isAddingTask, setIsAddingTask] = useState(false);
+  // Form state for new or editing task
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskDescription, setNewTaskDescription] = useState('');
   const [newDueDate, setNewDueDate] = useState<Date | null>(null);
   const [newPriority, setNewPriority] = useState<'High' | 'Medium' | 'Low'>('Medium');
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+
+  // Track completed task count by priority 
   const [completedTaskCounts, setCompletedTaskCounts] = useState<{ High: number; Medium: number; Low: number }>({ High: 0, Medium: 0, Low: 0 });
+  
+  // Track percentage completion by priority
   const [totalTaskCounts, setTotalTaskCounts] = useState<{ High: number; Medium: number; Low: number }>({ High: 0, Medium: 0, Low: 0 });
   const [completionPercentages, setCompletionPercentages] = useState<{ High: string; Medium: string; Low: string }>({ High: '0%', Medium: '0%', Low: '0%' });
 
@@ -46,6 +56,7 @@ const TaskManager = () => {
         if (Array.isArray(parsedTasks)) {
           let valid = true;
           for (const task of parsedTasks) {
+            // Validate task structure
             if (
               typeof task !== 'object' ||
               typeof task.id !== 'string' ||
@@ -84,7 +95,7 @@ const TaskManager = () => {
     }
   }, []);
 
-  // Save tasks to localStorage
+  // Save tasks to localStorage whenever tasks change
   useEffect(() => {
     if (tasks.length > 0 || localStorage.getItem('tasks')) { // only save if there are tasks
       // Convert Date objects to strings before saving
@@ -98,7 +109,7 @@ const TaskManager = () => {
     }
   }, [tasks]);
 
-  // Update derived state whenever tasks change
+  // Recalculate completed total and percentage values on task change
   useEffect(() => {
     const highCompleted = tasks.filter(task => task.completed && task.priority === 'High').length;
     const mediumCompleted = tasks.filter(task => task.completed && task.priority === 'Medium').length;
@@ -187,6 +198,7 @@ const TaskManager = () => {
     setNewPriority('Medium');
   };
 
+  // Return color classes for different priorities
   const getPriorityColor = (priority: 'High' | 'Medium' | 'Low') => {
     switch (priority) {
       case 'High':
