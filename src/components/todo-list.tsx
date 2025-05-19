@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+
+// Functional component for the to do list
 const TodoList = () => {
     // defining the structure of a list item
     type Todo = {
@@ -30,15 +32,18 @@ const TodoList = () => {
         if (newTask.trim() === '') return;
         // gives the item a unique id (Date.now())
         setTodos([...todos, { id: Date.now(), text: newTask, completed: false }]);
+        // Resets the input field after adding
         setNewTask('');
     };
 
+    // Toggles the 'complete' status of a task when clicked
     const toggleComplete = (id: number) => {
         setTodos(todos.map(todo =>
             todo.id === id ? { ...todo, completed: !todo.completed } : todo
         ));
     };
 
+    // Deletes a task by filyering it out based on its ID
     const deleteTodo = (id: number) => {
         // deleting an item using its unique id
         // keeps everything EXCEPT the item with the id that was passed
@@ -86,4 +91,6 @@ const TodoList = () => {
   );
 };
 // exporting to be used in other pages
+
+// Export the TodoList component for use in other parts of the app
 export default TodoList;
