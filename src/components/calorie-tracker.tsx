@@ -1,33 +1,47 @@
 import React, { useState } from 'react';
+// Importing a custom Button component
 import { Button } from '@/components/ui/button';
 
 const CalorieTracker = () => {
+  // State to store the final calculated BMR
   const [bmr, setBmr] = useState<number | null>(null);
+  // Input states for user provided age, heigh, and weight
   const [age, setAge] = useState<number | string>('');
   const [height, setHeight] = useState<number | string>('');
   const [weight, setWeight] = useState<number | string>('');
+
+  // Gender selection ('male' or 'female')
   const [gender, setGender] = useState<string>('male');
+
+  // Activity level (used as index for activity multipliers)
   const [activityLevel, setActivityLevel] = useState<number>(0);
 
+  // Function to calculate bMR using the Miffline-St Jeor ewuation
   const calculateBMR = () => {
+    // Convert input values to numbers (in case they come as strings)
     const ageNum = Number(age);
     const heightNum = Number(height);
     const weightNum = Number(weight);
 
+    // input validation - alert if any field is missing or invalid
     if (!ageNum || !heightNum || !weightNum) {
       alert('Please enter age, height, and weight.');
       return;
     }
 
     let calculatedBMR: number;
+    // BMR formula differs by gender
     if (gender === 'male') {
       calculatedBMR = 10 * weightNum + 6.25 * heightNum - 5 * ageNum + 5;
     } else {
       calculatedBMR = 10 * weightNum + 6.25 * heightNum - 5 * ageNum - 161;
     }
-
+    // Activity multipliers: BMR (resting)
     const activityMultipliers = [1, 1.2, 1.375, 1.55, 1.725, 1.9];
+
+    // Multiple BMR by selected activity level factor
     calculatedBMR *= activityMultipliers[activityLevel];
+    // Save the final result in state
     setBmr(calculatedBMR);
   };
 
